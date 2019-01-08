@@ -1,0 +1,34 @@
+Background: CPU cores are the lowest level thing. They serve for multiprocessing and multithreading. eg. thread1, thread2, thread3, thread4 can seperately run in four CPU cores.
+
+command of compiling: g++ -pthread -o test intro.cpp
+
+
+1. Thread
+Class to represent individual threads of execution.
+
+A thread of execution is a sequence of instructions that can be executed concurrently with other such sequences in multithreading environments, while sharing a same address space.
+
+2. Miltiple threads exist in one process. They are connected by shared memory(data).
+
+3. shared resources (eg. std::cout) can't be used by multi-threads at the same time.
+eg. t1: cout << I'm t1;   t2: cout << I'm t2.      outcome may be: I'm I'm t1 t2 
+Because t1 and t2 are racing for std::cout.
+
+4. Oversubscription: when creating threads more than the computer cores, it will cause lots of context switching, decreasing performance.
+
+thread::hardware_concurrency()   // indicates hardware concurrency. i.e. the number of CPU cores
+
+5. Mutex
+use mutex to prevent other threads to access the shared data/resourses, when I'm accessing them.
+
+6. Avoid DeadLock
+(1) locking single mutex is preferable.
+(2) If there has to be two or more mutexes, lock them in the same order.
+
+7. unique_lock
+void print_block (int n, char c) {
+  // critical section (exclusive access to std::cout signaled by lifetime of lck):
+  std::unique_lock<std::mutex> lck (mtx);
+  for (int i=0; i<n; ++i) { std::cout << c; }
+  std::cout << '\n';
+}
